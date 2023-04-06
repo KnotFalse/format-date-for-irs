@@ -1,0 +1,164 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="CyclomaticComplexityJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_limit" value="10" />
+    </inspection_tool>
+    <inspection_tool class="FunctionWithMultipleLoopsJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="112">
+            <item index="0" class="java.lang.String" itemvalue="nobr" />
+            <item index="1" class="java.lang.String" itemvalue="noembed" />
+            <item index="2" class="java.lang.String" itemvalue="comment" />
+            <item index="3" class="java.lang.String" itemvalue="noscript" />
+            <item index="4" class="java.lang.String" itemvalue="embed" />
+            <item index="5" class="java.lang.String" itemvalue="script" />
+            <item index="6" class="java.lang.String" itemvalue="search_results" />
+            <item index="7" class="java.lang.String" itemvalue="inventory" />
+            <item index="8" class="java.lang.String" itemvalue="row" />
+            <item index="9" class="java.lang.String" itemvalue="active_status" />
+            <item index="10" class="java.lang.String" itemvalue="part" />
+            <item index="11" class="java.lang.String" itemvalue="part_inventory" />
+            <item index="12" class="java.lang.String" itemvalue="part_price" />
+            <item index="13" class="java.lang.String" itemvalue="suggested_order" />
+            <item index="14" class="java.lang.String" itemvalue="part_name" />
+            <item index="15" class="java.lang.String" itemvalue="unit_price" />
+            <item index="16" class="java.lang.String" itemvalue="shipping_time" />
+            <item index="17" class="java.lang.String" itemvalue="barcode" />
+            <item index="18" class="java.lang.String" itemvalue="customer_part_number" />
+            <item index="19" class="java.lang.String" itemvalue="moeller_part_number" />
+            <item index="20" class="java.lang.String" itemvalue="last_movement" />
+            <item index="21" class="java.lang.String" itemvalue="stocked" />
+            <item index="22" class="java.lang.String" itemvalue="on_order" />
+            <item index="23" class="java.lang.String" itemvalue="result" />
+            <item index="24" class="java.lang.String" itemvalue="logo_container" />
+            <item index="25" class="java.lang.String" itemvalue="categories" />
+            <item index="26" class="java.lang.String" itemvalue="filters" />
+            <item index="27" class="java.lang.String" itemvalue="tags" />
+            <item index="28" class="java.lang.String" itemvalue="filter_label" />
+            <item index="29" class="java.lang.String" itemvalue="search" />
+            <item index="30" class="java.lang.String" itemvalue="options" />
+            <item index="31" class="java.lang.String" itemvalue="search_label" />
+            <item index="32" class="java.lang.String" itemvalue="stats" />
+            <item index="33" class="java.lang.String" itemvalue="stat" />
+            <item index="34" class="java.lang.String" itemvalue="stats_title" />
+            <item index="35" class="java.lang.String" itemvalue="part_barcode" />
+            <item index="36" class="java.lang.String" itemvalue="quantity" />
+            <item index="37" class="java.lang.String" itemvalue="part_quantity" />
+            <item index="38" class="java.lang.String" itemvalue="key" />
+            <item index="39" class="java.lang.String" itemvalue="cart_stats" />
+            <item index="40" class="java.lang.String" itemvalue="value" />
+            <item index="41" class="java.lang.String" itemvalue="orders" />
+            <item index="42" class="java.lang.String" itemvalue="order" />
+            <item index="43" class="java.lang.String" itemvalue="requisition" />
+            <item index="44" class="java.lang.String" itemvalue="confirmation" />
+            <item index="45" class="java.lang.String" itemvalue="buttons" />
+            <item index="46" class="java.lang.String" itemvalue="lines" />
+            <item index="47" class="java.lang.String" itemvalue="order_status" />
+            <item index="48" class="java.lang.String" itemvalue="purchase_order" />
+            <item index="49" class="java.lang.String" itemvalue="po_number" />
+            <item index="50" class="java.lang.String" itemvalue="release_date" />
+            <item index="51" class="java.lang.String" itemvalue="requisition_number" />
+            <item index="52" class="java.lang.String" itemvalue="requisition_date" />
+            <item index="53" class="java.lang.String" itemvalue="confirmation_number" />
+            <item index="54" class="java.lang.String" itemvalue="confirmation_date" />
+            <item index="55" class="java.lang.String" itemvalue="crib_doc" />
+            <item index="56" class="java.lang.String" itemvalue="crib_doc_prefix" />
+            <item index="57" class="java.lang.String" itemvalue="crib_doc_number" />
+            <item index="58" class="java.lang.String" itemvalue="total_lines" />
+            <item index="59" class="java.lang.String" itemvalue="total_lines_prefix" />
+            <item index="60" class="java.lang.String" itemvalue="total_lines_number" />
+            <item index="61" class="java.lang.String" itemvalue="total_lines_value_prefix" />
+            <item index="62" class="java.lang.String" itemvalue="total_lines_value" />
+            <item index="63" class="java.lang.String" itemvalue="open_lines" />
+            <item index="64" class="java.lang.String" itemvalue="open_lines_prefix" />
+            <item index="65" class="java.lang.String" itemvalue="open_lines_number" />
+            <item index="66" class="java.lang.String" itemvalue="open_lines_value_prefix" />
+            <item index="67" class="java.lang.String" itemvalue="open_lines_value" />
+            <item index="68" class="java.lang.String" itemvalue="requisition_date" />
+            <item index="69" class="java.lang.String" itemvalue="release" />
+            <item index="70" class="java.lang.String" itemvalue="status" />
+            <item index="71" class="java.lang.String" itemvalue="next_step" />
+            <item index="72" class="java.lang.String" itemvalue="action" />
+            <item index="73" class="java.lang.String" itemvalue="stages" />
+            <item index="74" class="java.lang.String" itemvalue="stage" />
+            <item index="75" class="java.lang.String" itemvalue="stage_icon" />
+            <item index="76" class="java.lang.String" itemvalue="stage_label" />
+            <item index="77" class="java.lang.String" itemvalue="order_information" />
+            <item index="78" class="java.lang.String" itemvalue="cart_prefix" />
+            <item index="79" class="java.lang.String" itemvalue="cart_number" />
+            <item index="80" class="java.lang.String" itemvalue="cart" />
+            <item index="81" class="java.lang.String" itemvalue="parts" />
+            <item index="82" class="java.lang.String" itemvalue="notes" />
+            <item index="83" class="java.lang.String" itemvalue="part_description" />
+            <item index="84" class="java.lang.String" itemvalue="statistics" />
+            <item index="85" class="java.lang.String" itemvalue="total" />
+            <item index="86" class="java.lang.String" itemvalue="unique_parts" />
+            <item index="87" class="java.lang.String" itemvalue="wrapper" />
+            <item index="88" class="java.lang.String" itemvalue="part_total" />
+            <item index="89" class="java.lang.String" itemvalue="part_location" />
+            <item index="90" class="java.lang.String" itemvalue="accounting" />
+            <item index="91" class="java.lang.String" itemvalue="address_line_1" />
+            <item index="92" class="java.lang.String" itemvalue="address_line_2" />
+            <item index="93" class="java.lang.String" itemvalue="zip" />
+            <item index="94" class="java.lang.String" itemvalue="name" />
+            <item index="95" class="java.lang.String" itemvalue="city" />
+            <item index="96" class="java.lang.String" itemvalue="state" />
+            <item index="97" class="java.lang.String" itemvalue="country" />
+            <item index="98" class="java.lang.String" itemvalue="page" />
+            <item index="99" class="java.lang.String" itemvalue="hotlist_status" />
+            <item index="100" class="java.lang.String" itemvalue="distributor_price" />
+            <item index="101" class="java.lang.String" itemvalue="order_quantity" />
+            <item index="102" class="java.lang.String" itemvalue="order_point" />
+            <item index="103" class="java.lang.String" itemvalue="lead_time" />
+            <item index="104" class="java.lang.String" itemvalue="distributor" />
+            <item index="105" class="java.lang.String" itemvalue="override" />
+            <item index="106" class="java.lang.String" itemvalue="type" />
+            <item index="107" class="java.lang.String" itemvalue="group" />
+            <item index="108" class="java.lang.String" itemvalue="date" />
+            <item index="109" class="java.lang.String" itemvalue="part_groups" />
+            <item index="110" class="java.lang.String" itemvalue="part_group_name" />
+            <item index="111" class="java.lang.String" itemvalue="part_group" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="JSLastCommaInArrayLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSLastCommaInObjectLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="NestingDepthJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_limit" value="5" />
+    </inspection_tool>
+    <inspection_tool class="NonAsciiCharacters" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="CHECK_FOR_NOT_ASCII_IN_ANY_OTHER_WORD" value="true" />
+      <option name="CHECK_FOR_DIFFERENT_LANGUAGES_IN_ANY_OTHER_WORD" value="true" />
+    </inspection_tool>
+    <inspection_tool class="ParametersPerFunctionJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_limit" value="5" />
+    </inspection_tool>
+    <inspection_tool class="PhpBooleanCanBeSimplifiedInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpClassHasTooManyDeclaredMembersInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpComplexClassInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpComplexFunctionInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpFeatureEnvyLocalInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpFunctionCyclomaticComplexityInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpHalsteadMetricInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpLackOfCohesionInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpMatchExpressionWithOnlyDefaultArmInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpMemberCanBePulledUpInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpPointlessBooleanExpressionInConditionInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpRedundantTypeInUnionTypeInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PointlessBitwiseExpressionJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_ignoreExpressionsContainingConstants" value="false" />
+    </inspection_tool>
+    <inspection_tool class="RegExpSimplifiable" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="StatementsPerFunctionJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_limit" value="30" />
+    </inspection_tool>
+    <inspection_tool class="ThreeNegationsPerFunctionJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="TsLint" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="WebpackConfigHighlighting" enabled="false" level="WARNING" enabled_by_default="false" />
+  </profile>
+</component>
