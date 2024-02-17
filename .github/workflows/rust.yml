@@ -22,7 +22,6 @@ jobs:
           toolchain: stable
           profile: minimal
           override: true
-          cache: 'cargo'
 
       - name: Cache Cargo Dependencies
         uses: actions/cache@v3
@@ -90,39 +89,45 @@ jobs:
         with:
           name: ubuntu-latest-binary
       - run: |
-          FILE=$(ls ubuntu-latest-binary*)
-          echo "Uploading $FILE"
+          FILE=$(ls target/releases/format-date-for-irs)
+          NEW_FILE="format-date-for-irs-@{{ matrix.os }}-binary"
+          mv $FILE $NEW_FILE
+          echo "Uploading $NEW_FILE"
           UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
           curl \
           -X POST \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -H "Content-Type: application/octet-stream" \
-          --data-binary @$FILE \
-          "$UPLOAD_URL?name=$(basename $FILE)&label=$(basename $FILE)"
+          --data-binary @$NEW_FILE \
+          "$UPLOAD_URL?name=$(basename $NEW_FILE)&label=$(basename $NEW_FILE)"
 
       - name: Download and Upload Artifact for macOS
         uses: actions/download-artifact@v2
         with:
           name: macos-latest-binary
       - run: |
-          FILE=$(ls macos-latest-binary*)
-          echo "Uploading $FILE"
+          FILE=$(ls target/releases/format-date-for-irs)
+          NEW_FILE="format-date-for-irs-@{{ matrix.os }}-binary"
+          mv $FILE $NEW_FILE
+          echo "Uploading $NEW_FILE"
           UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
           curl \
           -X POST \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -H "Content-Type: application/octet-stream" \
-          --data-binary @$FILE \
-          "$UPLOAD_URL?name=$(basename $FILE)&label=$(basename $FILE)"
+          --data-binary @$NEW_FILE \
+          "$UPLOAD_URL?name=$(basename $NEW_FILE)&label=$(basename $NEW_FILE)"
 
       - name: Download and Upload Artifact for Windows
         run: |
-          FILE=$(ls target/release/format-date-for-irs.exe) 
-          echo "Found Windows file: $FILE"
+          $FILE = Get-ChildItem -Path target\releases -Filter format-date-for-irs-*.exe | Select-Object -First 1 -ExpandProperty Name
+          Rename-Item -Path target\releases\$FILE -NewName format-date-for-irs-(${matrix.os}-binary.exe)
+          echo "Found Windows file: format-date-for-irs-(${matrix.os}-binary.exe)"
           echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
           curl \
             -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/octet-stream" \
-            --data-binary @$FILE \
-            "${{ steps.create_release.outputs.upload_url }}?name=$FILE&label=$FILE"
+            --data-binary @target\releases\format-date-for-irs-(${matrix.os}-binary.exe) \
+            "${{ steps.create_release.outputs.upload_url }}?name=format-date-for-irs-${{ matrix.os }}-binary.exe&label=format-date-for-irs-${{ matrix.os }}-binary.exe"
+        shell: pwsh
