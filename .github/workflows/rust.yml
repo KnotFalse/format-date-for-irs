@@ -44,7 +44,7 @@ jobs:
       - name: List Target Build Directory Contents
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then 
-            dir target\release 
+            dir target/release 
           else
             ls -la target/release 
           fi
