@@ -22,6 +22,16 @@ jobs:
           toolchain: stable
           profile: minimal
           override: true
+          cache: 'cargo'
+
+      - name: Cache Cargo Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build
         uses: actions-rs/cargo@v1
@@ -30,7 +40,12 @@ jobs:
           args: --release
 
       - name: Set binary path
-        run: echo "BINARY_PATH=target/release/format-date-for-irs${{ matrix.os == 'windows-latest' && '.exe' || '' }}" >> $GITHUB_ENV
+        run: | 
+          if [ "$RUNNER_OS" == "Windows" ]; then 
+            echo "BINARY_PATH=target\release\format-date-for-irs.exe" >> $GITHUB_ENV
+          else
+            echo "BINARY_PATH=target/release/format-date-for-irs${{ matrix.os == 'windows-latest' && '.exe' || '' }}" >> $GITHUB_ENV
+          fi 
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -65,7 +80,6 @@ jobs:
           FILE=$(ls ubuntu-latest-binary*)
           echo "Uploading $FILE"
           UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
-          echo "Upload URL: $UPLOAD_URL"
           curl \
           -X POST \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -81,7 +95,6 @@ jobs:
           FILE=$(ls macos-latest-binary*)
           echo "Uploading $FILE"
           UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
-          echo "Upload URL: $UPLOAD_URL"
           curl \
           -X POST \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -90,17 +103,13 @@ jobs:
           "$UPLOAD_URL?name=$(basename $FILE)&label=$(basename $FILE)"
 
       - name: Download and Upload Artifact for Windows
-        uses: actions/download-artifact@v2
-        with:
-          name: windows-latest-binary
-      - run: |
-          FILE=$(ls windows-latest-binary*)
-          echo "Uploading $FILE"
-          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
-          echo "Upload URL: $UPLOAD_URL"
+        run: |
+          FILE=$(ls target/release/format-date-for-irs.exe) 
+          echo "Found Windows file: $FILE"
+          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
           curl \
-          -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -H "Content-Type: application/octet-stream" \
-          --data-binary @$FILE \
-          "$UPLOAD_URL?name=$(basename $FILE)&label=$(basename $FILE)"
+            -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @$FILE \
+            "${{ steps.create_release.outputs.upload_url }}?name=$FILE&label=$FILE"
