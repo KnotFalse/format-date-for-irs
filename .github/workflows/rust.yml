@@ -91,7 +91,7 @@ jobs:
       - run: |
           echo $(ls -R)
           FILE=$(ls format-date-for-irs)
-          NEW_FILE="format-date-for-irs-@{{ matrix.os }}-binary"
+          NEW_FILE="format-date-for-irs-${{ matrix.os }}-binary"
           mv $FILE $NEW_FILE
           echo "Uploading $NEW_FILE"
           UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
@@ -108,7 +108,7 @@ jobs:
           name: macos-latest-binary
       - run: |
           FILE=$(ls format-date-for-irs)
-          NEW_FILE="format-date-for-irs-@{{ matrix.os }}-binary"
+          NEW_FILE="format-date-for-irs-${{ matrix.os }}-binary"
           mv $FILE $NEW_FILE
           echo "Uploading $NEW_FILE"
           UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
@@ -129,6 +129,6 @@ jobs:
             -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/octet-stream" \
-            --data-binary @target\release\format-date-for-irs-(${matrix.os}-binary.exe) \
+            --data-binary @format-date-for-irs-(${matrix.os}-binary.exe) \
             "${{ steps.create_release.outputs.upload_url }}?name=format-date-for-irs-${{ matrix.os }}-binary.exe&label=format-date-for-irs-${{ matrix.os }}-binary.exe"
         shell: pwsh
