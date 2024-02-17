@@ -39,6 +39,18 @@ jobs:
           command: build
           args: --release
 
+      - name: Print Working Directory (within Build)
+        run: pwd  
+
+      - name: List Target Build Directory Contents
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then 
+            dir target\release 
+          else
+            ls -la target/release 
+          fi
+        shell: bash
+
       - name: Set binary path 
         run: | 
           if [[ "$RUNNER_OS" == "Windows" ]]; then 
