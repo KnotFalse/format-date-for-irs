@@ -65,70 +65,70 @@ jobs:
           name: ${{ matrix.os }}-binary
           path: ${{ env.BINARY_PATH }}
 
-  create-release-and-upload-assets:
-    name: Create Release and Upload Assets
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set Tag Timestamp
-        run: echo "TAG_TIMESTAMP=$(date -u +'%Y-%m-%dT%H%M%SZ')" >> $GITHUB_ENV
+  # create-release-and-upload-assets:
+  #   name: Create Release and Upload Assets
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Set Tag Timestamp
+  #       run: echo "TAG_TIMESTAMP=$(date -u +'%Y-%m-%dT%H%M%SZ')" >> $GITHUB_ENV
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: release-${{ env.TAG_TIMESTAMP }}
-          release_name: Release ${{ env.TAG_TIMESTAMP }}
-          draft: false
-          prerelease: false
+  #     - name: Create Release
+  #       id: create_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: release-${{ env.TAG_TIMESTAMP }}
+  #         release_name: Release ${{ env.TAG_TIMESTAMP }}
+  #         draft: false
+  #         prerelease: false
 
-      - name: Download and Upload Artifact for Ubuntu
-        uses: actions/download-artifact@v2
-        with:
-          name: ubuntu-latest-binary
-      - run: |
-          echo $(ls -R)
-          FILE=$(ls format-date-for-irs)
-          NEW_FILE="format-date-for-irs-${{ matrix.os }}-binary"
-          mv $FILE $NEW_FILE
-          echo "Uploading $NEW_FILE"
-          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
-          curl \
-          -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -H "Content-Type: application/octet-stream" \
-          --data-binary @$NEW_FILE \
-          "$UPLOAD_URL?name=$(basename $NEW_FILE)&label=$(basename $NEW_FILE)"
+  #     - name: Download and Upload Artifact for Ubuntu
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: ubuntu-latest-binary
+  #     - run: |
+  #         echo $(ls -R)
+  #         FILE=$(ls format-date-for-irs)
+  #         NEW_FILE="format-date-for-irs-${{ matrix.os }}-binary"
+  #         mv $FILE $NEW_FILE
+  #         echo "Uploading $NEW_FILE"
+  #         UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
+  #         curl \
+  #         -X POST \
+  #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+  #         -H "Content-Type: application/octet-stream" \
+  #         --data-binary @$NEW_FILE \
+  #         "$UPLOAD_URL?name=$(basename $NEW_FILE)&label=$(basename $NEW_FILE)"
 
-      - name: Download and Upload Artifact for macOS
-        uses: actions/download-artifact@v2
-        with:
-          name: macos-latest-binary
-      - run: |
-          FILE=$(ls format-date-for-irs)
-          NEW_FILE="format-date-for-irs-${{ matrix.os }}-binary"
-          mv $FILE $NEW_FILE
-          echo "Uploading $NEW_FILE"
-          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
-          curl \
-          -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -H "Content-Type: application/octet-stream" \
-          --data-binary @$NEW_FILE \
-          "$UPLOAD_URL?name=$(basename $NEW_FILE)&label=$(basename $NEW_FILE)"
+  #     - name: Download and Upload Artifact for macOS
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: macos-latest-binary
+  #     - run: |
+  #         FILE=$(ls format-date-for-irs)
+  #         NEW_FILE="format-date-for-irs-${{ matrix.os }}-binary"
+  #         mv $FILE $NEW_FILE
+  #         echo "Uploading $NEW_FILE"
+  #         UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
+  #         curl \
+  #         -X POST \
+  #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+  #         -H "Content-Type: application/octet-stream" \
+  #         --data-binary @$NEW_FILE \
+  #         "$UPLOAD_URL?name=$(basename $NEW_FILE)&label=$(basename $NEW_FILE)"
 
-      - name: Download and Upload Artifact for Windows
-        run: |
-          $FILE = Get-ChildItem -Filter format-date-for-irs.exe | Select-Object -First 1 -ExpandProperty Name
-          Rename-Item -Path $FILE -NewName format-date-for-irs-(${matrix.os}-binary.exe)
-          echo "Found Windows file: format-date-for-irs-(${matrix.os}-binary.exe)"
-          echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
-          curl \
-            -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/octet-stream" \
-            --data-binary @format-date-for-irs-(${matrix.os}-binary.exe) \
-            "${{ steps.create_release.outputs.upload_url }}?name=format-date-for-irs-${{ matrix.os }}-binary.exe&label=format-date-for-irs-${{ matrix.os }}-binary.exe"
-        shell: pwsh
+  #     - name: Download and Upload Artifact for Windows
+  #       run: |
+  #         $FILE = Get-ChildItem -Filter format-date-for-irs.exe | Select-Object -First 1 -ExpandProperty Name
+  #         Rename-Item -Path $FILE -NewName format-date-for-irs-(${matrix.os}-binary.exe)
+  #         echo "Found Windows file: format-date-for-irs-(${matrix.os}-binary.exe)"
+  #         echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
+  #         curl \
+  #           -X POST \
+  #           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+  #           -H "Content-Type: application/octet-stream" \
+  #           --data-binary @format-date-for-irs-(${matrix.os}-binary.exe) \
+  #           "${{ steps.create_release.outputs.upload_url }}?name=format-date-for-irs-${{ matrix.os }}-binary.exe&label=format-date-for-irs-${{ matrix.os }}-binary.exe"
+  #       shell: pwsh
