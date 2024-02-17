@@ -90,7 +90,7 @@ jobs:
           name: ubuntu-latest-binary
       - run: |
           echo $(ls -R)
-          FILE=$(ls target/release/format-date-for-irs)
+          FILE=$(ls format-date-for-irs)
           NEW_FILE="format-date-for-irs-@{{ matrix.os }}-binary"
           mv $FILE $NEW_FILE
           echo "Uploading $NEW_FILE"
@@ -107,7 +107,7 @@ jobs:
         with:
           name: macos-latest-binary
       - run: |
-          FILE=$(ls target/release/format-date-for-irs)
+          FILE=$(ls format-date-for-irs)
           NEW_FILE="format-date-for-irs-@{{ matrix.os }}-binary"
           mv $FILE $NEW_FILE
           echo "Uploading $NEW_FILE"
@@ -121,8 +121,8 @@ jobs:
 
       - name: Download and Upload Artifact for Windows
         run: |
-          $FILE = Get-ChildItem -Path target\release -Filter format-date-for-irs.exe | Select-Object -First 1 -ExpandProperty Name
-          Rename-Item -Path target\release\$FILE -NewName format-date-for-irs-(${matrix.os}-binary.exe)
+          $FILE = Get-ChildItem -Filter format-date-for-irs.exe | Select-Object -First 1 -ExpandProperty Name
+          Rename-Item -Path $FILE -NewName format-date-for-irs-(${matrix.os}-binary.exe)
           echo "Found Windows file: format-date-for-irs-(${matrix.os}-binary.exe)"
           echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
           curl \
