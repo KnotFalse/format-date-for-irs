@@ -89,6 +89,7 @@ jobs:
         with:
           name: ubuntu-latest-binary
       - run: |
+          echo $(pwd)
           FILE=$(ls target/release/format-date-for-irs)
           NEW_FILE="format-date-for-irs-@{{ matrix.os }}-binary"
           mv $FILE $NEW_FILE
