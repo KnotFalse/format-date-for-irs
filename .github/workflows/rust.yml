@@ -14,58 +14,93 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        profile: minimal
-        override: true
-        cache: 'cargo'
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
 
-    - name: Cache Cargo Dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
 
-    - name: Build
-      uses: actions-rs/cargo@v1
-      with:
-        command: build
-        args: --release
+      - name: Set binary path
+        run: echo "BINARY_PATH=target/release/format-date-for-irs${{ matrix.os == 'windows-latest' && '.exe' || '' }}" >> $GITHUB_ENV
 
-    - name: Set binary path
-      run: echo "BINARY_PATH=target/release/format-date-for-irs${{ matrix.os == 'windows-latest' && '.exe' || '' }}" >> $GITHUB_ENV
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}-binary
+          path: ${{ env.BINARY_PATH }}
 
-    - name: Set Release Timestamp
-      run: echo "RELEASE_TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+  create-release-and-upload-assets:
+    name: Create Release and Upload Assets
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Tag Timestamp
+        run: echo "TAG_TIMESTAMP=$(date -u +'%Y-%m-%dT%H%M%SZ')" >> $GITHUB_ENV
 
-    - name: Set Tag Timestamp
-      run: echo "TAG_TIMESTAMP=$(date -u +'%Y-%m-%dT%H%M%SZ')" >> $GITHUB_ENV
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ env.TAG_TIMESTAMP }}
+          release_name: Release ${{ env.TAG_TIMESTAMP }}
+          draft: false
+          prerelease: false
 
+      - name: Download and Upload Artifact for Ubuntu
+        uses: actions/download-artifact@v2
+        with:
+          name: ubuntu-latest-binary
+      - run: |
+          FILE=$(ls ubuntu-latest-binary*)
+          echo "Uploading $FILE"
+          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
+          echo "Upload URL: $UPLOAD_URL"
+          curl \
+          -X POST \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Content-Type: application/octet-stream" \
+          --data-binary @$FILE \
+          "$UPLOAD_URL?name=$(basename $FILE)&label=$(basename $FILE)"
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: release-${{ env.TAG_TIMESTAMP }}
-        release_name: Release ${{ env.RELEASE_TIMESTAMP }}
-        draft: false
-        prerelease: false
+      - name: Download and Upload Artifact for macOS
+        uses: actions/download-artifact@v2
+        with:
+          name: macos-latest-binary
+      - run: |
+          FILE=$(ls macos-latest-binary*)
+          echo "Uploading $FILE"
+          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
+          echo "Upload URL: $UPLOAD_URL"
+          curl \
+          -X POST \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Content-Type: application/octet-stream" \
+          --data-binary @$FILE \
+          "$UPLOAD_URL?name=$(basename $FILE)&label=$(basename $FILE)"
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.BINARY_PATH }}
-        asset_name: ${{ matrix.os }}-binary${{ matrix.os == 'windows-latest' && '.exe' || '' }}
-        asset_content_type: application/octet-stream
+      - name: Download and Upload Artifact for Windows
+        uses: actions/download-artifact@v2
+        with:
+          name: windows-latest-binary
+      - run: |
+          FILE=$(ls windows-latest-binary*)
+          echo "Uploading $FILE"
+          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
+          echo "Upload URL: $UPLOAD_URL"
+          curl \
+          -X POST \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Content-Type: application/octet-stream" \
+          --data-binary @$FILE \
+          "$UPLOAD_URL?name=$(basename $FILE)&label=$(basename $FILE)"
