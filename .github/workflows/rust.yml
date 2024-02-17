@@ -32,14 +32,17 @@ jobs:
     - name: Set binary path
       run: echo "BINARY_PATH=target/release/format-date-for-irs${{ matrix.os == 'windows-latest' && '.exe' || '' }}" >> $GITHUB_ENV
 
+    - name: Set Timestamp
+      run: echo "TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref_name }}-${{ format(now(), 'yyyy-MM-ddTHH:mm:ssZ') }} 
-        release_name: Release ${{ github.ref_name }}-${{ format(now(), 'yyyy-MM-ddTHH:mm:ssZ') }} 
+        tag_name: release-${{ env.TIMESTAMP }}
+        release_name: Release ${{ env.TIMESTAMP }}
         draft: false
         prerelease: false
 
