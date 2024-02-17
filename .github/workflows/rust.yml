@@ -38,8 +38,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.sha }}
+        tag_name: ${{ github.ref_name }}-${{ format(now(), 'yyyy-MM-ddTHH:mm:ssZ') }} 
+        release_name: Release ${{ github.ref_name }}-${{ format(now(), 'yyyy-MM-ddTHH:mm:ssZ') }} 
         draft: false
         prerelease: false
 
