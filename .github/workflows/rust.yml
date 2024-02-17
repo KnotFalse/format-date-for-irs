@@ -39,13 +39,14 @@ jobs:
           command: build
           args: --release
 
-      - name: Set binary path
+      - name: Set binary path 
         run: | 
-          if [ "$RUNNER_OS" == "Windows" ]; then 
+          if [[ "$RUNNER_OS" == "Windows" ]]; then 
             echo "BINARY_PATH=target\release\format-date-for-irs.exe" >> $GITHUB_ENV
           else
             echo "BINARY_PATH=target/release/format-date-for-irs${{ matrix.os == 'windows-latest' && '.exe' || '' }}" >> $GITHUB_ENV
           fi 
+        shell: bash 
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
