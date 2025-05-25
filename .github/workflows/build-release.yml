@@ -62,9 +62,9 @@ jobs:
           path: release/windows
       - name: Rename binaries
         run: |
-          mv release/linux/format-date-for-irs release/format-date-for-irs-linux
-          mv release/macos/format-date-for-irs release/format-date-for-irs-macos
-          mv release/windows/format-date-for-irs.exe release/format-date-for-irs-windows.exe
+          mv release/linux/target/release/format-date-for-irs release/format-date-for-irs-linux
+          mv release/macos/target/release/format-date-for-irs release/format-date-for-irs-macos
+          mv release/windows/target/release/format-date-for-irs.exe release/format-date-for-irs-windows.exe
 
       - name: Set timestamp
         id: time
