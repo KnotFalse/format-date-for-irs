@@ -1,0 +1,117 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            ext: ""
+          - os: macos-latest
+            ext: ""
+          - os: windows-latest
+            ext: ".exe"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Cache cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-binary
+          path: target/release/format-date-for-irs${{ matrix.ext }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ubuntu-latest-binary
+          path: release/linux
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: macos-latest-binary
+          path: release/macos
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: windows-latest-binary
+          path: release/windows
+      - name: Rename binaries
+        run: |
+          mv release/linux/format-date-for-irs release/format-date-for-irs-linux
+          mv release/macos/format-date-for-irs release/format-date-for-irs-macos
+          mv release/windows/format-date-for-irs.exe release/format-date-for-irs-windows.exe
+
+      - name: Set timestamp
+        id: time
+        run: echo "timestamp=$(date -u +'%Y-%m-%dT%H%M%SZ')" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ steps.time.outputs.timestamp }}
+          release_name: Release ${{ steps.time.outputs.timestamp }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Linux asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/format-date-for-irs-linux
+          asset_name: format-date-for-irs-linux
+          asset_content_type: application/octet-stream
+      - name: Upload macOS asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/format-date-for-irs-macos
+          asset_name: format-date-for-irs-macos
+          asset_content_type: application/octet-stream
+      - name: Upload Windows asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/format-date-for-irs-windows.exe
+          asset_name: format-date-for-irs-windows.exe
+          asset_content_type: application/octet-stream
+
