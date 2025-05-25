@@ -49,11 +49,11 @@ jobs:
         run: cargo build --release
 
       - name: Prepare artifacts
+        shell: bash
         run: |
           mv target/release/format-date-for-irs${{ matrix.ext }} format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
           tar -cf format-date-for-irs-${{ matrix.name }}.tar format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
           tar -czf format-date-for-irs-${{ matrix.name }}.tar.gz format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
-
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
