@@ -1,0 +1,111 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ master ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+          include:
+            - os: ubuntu-latest
+              ext: ""
+              name: linux
+            - os: macos-latest
+              ext: ""
+              name: macos
+            - os: windows-latest
+              ext: ".exe"
+              name: windows
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Cache cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-binary
+          path: target/release/format-date-for-irs${{ matrix.ext }}
+
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      timestamp: ${{ steps.time.outputs.timestamp }}
+    steps:
+      - name: Set timestamp
+        id: time
+        run: echo "timestamp=$(date -u +'%Y-%m-%dT%H%M%SZ')" >> $GITHUB_OUTPUT
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ steps.time.outputs.timestamp }}
+          release_name: Release ${{ steps.time.outputs.timestamp }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+  upload-assets:
+    needs: [build, create-release]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            ext: ""
+            name: linux
+          - os: macos-latest
+            ext: ""
+            name: macos
+          - os: windows-latest
+            ext: ".exe"
+            name: windows
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.os }}-binary
+          path: .
+      - name: Rename binary
+        run: mv format-date-for-irs${{ matrix.ext }} format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
+          asset_name: format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
+          asset_content_type: application/octet-stream
+
