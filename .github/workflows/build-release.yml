@@ -48,11 +48,20 @@ jobs:
       - name: Build
         run: cargo build --release
 
+      - name: Prepare artifacts
+        run: |
+          mv target/release/format-date-for-irs${{ matrix.ext }} format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
+          tar -cf format-date-for-irs-${{ matrix.name }}.tar format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
+          tar -czf format-date-for-irs-${{ matrix.name }}.tar.gz format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
+
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-binary
-          path: target/release/format-date-for-irs${{ matrix.ext }}
+          name: ${{ matrix.name }}-assets
+          path: |
+            format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
+            format-date-for-irs-${{ matrix.name }}.tar
+            format-date-for-irs-${{ matrix.name }}.tar.gz
 
   create-release:
     needs: build
@@ -95,11 +104,9 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.os }}-binary
+          name: ${{ matrix.name }}-assets
           path: .
-      - name: Rename binary
-        run: mv format-date-for-irs${{ matrix.ext }} format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
-      - name: Upload release asset
+      - name: Upload release binary
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -108,4 +115,22 @@ jobs:
           asset_path: format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
           asset_name: format-date-for-irs-${{ matrix.name }}${{ matrix.ext }}
           asset_content_type: application/octet-stream
+      - name: Upload tar archive
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: format-date-for-irs-${{ matrix.name }}.tar
+          asset_name: format-date-for-irs-${{ matrix.name }}.tar
+          asset_content_type: application/x-tar
+      - name: Upload compressed tar archive
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: format-date-for-irs-${{ matrix.name }}.tar.gz
+          asset_name: format-date-for-irs-${{ matrix.name }}.tar.gz
+          asset_content_type: application/gzip
 
