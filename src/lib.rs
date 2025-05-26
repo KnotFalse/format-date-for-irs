@@ -61,6 +61,7 @@ pub fn check_clipboard()
 /// # Examples
 ///
 /// ```
+/// use format_date_for_irs::parse_date;
 /// use chrono::NaiveDate;
 /// let date = parse_date(" 12/31/23 ");
 /// assert_eq!(date, Some(NaiveDate::from_ymd_opt(2023, 12, 31).unwrap()));
@@ -84,7 +85,7 @@ pub fn parse_date(date: &str) -> Option<NaiveDate> {
     None
 }
 
-/// Formats a date for the IRS.
+/// Formats a `NaiveDate` as a string in `mm/dd/YYYY` format for IRS compliance.
 ///
 /// # Examples
 ///
@@ -96,12 +97,9 @@ pub fn parse_date(date: &str) -> Option<NaiveDate> {
 /// assert_eq!(format_date_for_irs(&date), "01/02/2021");
 /// ```
 ///
-/// Formats a `NaiveDate` as a string in `mm/dd/YYYY` format for IRS compliance.
-///
-/// # Examples
-///
 /// ```
 /// use chrono::NaiveDate;
+/// use format_date_for_irs::format_date_for_irs;
 /// let date = NaiveDate::from_ymd_opt(2024, 5, 15).unwrap();
 /// let formatted = format_date_for_irs(&date);
 /// assert_eq!(formatted, "05/15/2024");
