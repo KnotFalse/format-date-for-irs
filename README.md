@@ -1,4 +1,4 @@
-[![Build and Release](https://github.com/GavinSiver/format-date-for-irs/actions/workflows/rust.yml/badge.svg)](https://github.com/GavinSiver/format-date-for-irs/actions/workflows/rust.yml)
+[![Build and Release](https://github.com/GavinSiver/format-date-for-irs/actions/workflows/build-release.yml/badge.svg)](https://github.com/GavinSiver/format-date-for-irs/actions/workflows/build-release.yml)
 
 # Format Date for IRS
 
