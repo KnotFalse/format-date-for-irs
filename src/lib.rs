@@ -107,7 +107,6 @@ pub fn parse_date(date: &str) -> Option<NaiveDate> {
 /// assert_eq!(formatted, "05/15/2024");
 /// ```
 pub fn format_date_for_irs(date: &NaiveDate) -> String {
-pub fn format_date_for_irs(date: &NaiveDate) -> String {
     let date = NaiveDate::from_ymd_opt(date.year(), date.month(), date.day()).unwrap();
     let date = date.format("%m/%d/%Y").to_string();
 
